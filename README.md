@@ -112,19 +112,19 @@ JobPortal is a comprehensive MERN stack application that streamlines the job rec
 ## Screenshots
 
 ### Homepage
-![Homepage](screenshots/homepage.png)
+![Homepage](./Screenshot%202026-01-27%20213315.png)
 *Landing page with job search and featured job listings*
 
 ### Job Listings
-![Job Listings](screenshots/jobs.png)
+![Job Listings](./Screenshot%202026-01-27%20213331.png)
 *Browse latest and top job openings from various companies*
 
 ### Company Dashboard
-![Company Dashboard](screenshots/companies.png)
+![Company Dashboard](./Screenshot%202026-01-27%20213432.png)
 *Recruiters can manage their registered companies*
 
 ### User Profile
-![User Profile](screenshots/profile.png)
+![User Profile](./Screenshot%202026-01-27%20213525.png)
 *Student profile with skills, resume, and applied jobs tracking*
 
 ---
