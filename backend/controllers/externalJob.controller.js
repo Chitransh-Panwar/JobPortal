@@ -1,4 +1,5 @@
 const CACHE_TTL_MS = 5 * 60 * 1000;
+const MAX_CACHE_ENTRIES = 50;
 const externalJobsCache = new Map();
 
 const providerEnvConfig = {
@@ -139,12 +140,16 @@ const normalizeExternalJob = (provider, rawJob, index = 0) => {
 };
 
 const fetchJson = async (url, options = {}) => {
-  const response = await fetch(url, options);
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`External API request failed (${response.status}): ${errorText || response.statusText}`);
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`External API request failed (${response.status}): ${errorText || response.statusText}`);
+    }
+    return response.json();
+  } catch (error) {
+    throw new Error(error?.message || "External API request failed due to network error.");
   }
-  return response.json();
 };
 
 const providerHandlers = {
@@ -321,6 +326,10 @@ export const getExternalJobs = async (req, res) => {
       jobs,
       providerResults,
     });
+    if (externalJobsCache.size > MAX_CACHE_ENTRIES) {
+      const oldestKey = externalJobsCache.keys().next().value;
+      externalJobsCache.delete(oldestKey);
+    }
 
     return res.status(200).json({
       success: true,

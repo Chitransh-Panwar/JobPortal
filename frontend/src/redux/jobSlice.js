@@ -53,6 +53,6 @@ export const {
   setSearchedQuery,
   setSalaryFilter,
   setJobsLoading,
-  setIncludeExternalJobs
+  setIncludeExternalJobs,
 } = jobSlice.actions;
 export default jobSlice.reducer;

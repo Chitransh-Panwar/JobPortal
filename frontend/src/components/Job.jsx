@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Bookmark } from "lucide-react";
 import { Avatar, AvatarImage } from "./ui/avatar";
@@ -20,11 +20,8 @@ const Job = ({ job }) => {
   };
 
   const { user } = useSelector((store) => store.auth);
-  const isIntiallyApplied = useMemo(
-    () => job?.applications?.some((application) => application.applicant === user?._id) || false,
-    [job?.applications, user?._id]
-  );
-  const [isApplied, setIsApplied] = useState(Boolean(isIntiallyApplied));
+  const isInitiallyApplied = job?.applications?.some((application) => application.applicant === user?._id) || false;
+  const [isApplied, setIsApplied] = useState(Boolean(isInitiallyApplied));
 
   const jobId = job?._id;
   const isExternal = Boolean(job?.isExternal);
@@ -59,11 +56,11 @@ const Job = ({ job }) => {
   };
 
   useEffect(() => {
-    setIsApplied(Boolean(isIntiallyApplied));
-  }, [isIntiallyApplied]);
+    setIsApplied(Boolean(isInitiallyApplied));
+  }, [isInitiallyApplied]);
 
   return (
-    <article className="group rounded-2xl border border-purple-100 bg-white/95 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+    <article aria-label={`Job card for ${job?.title || "job"}`} className="group rounded-2xl border border-purple-100 bg-white/95 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-500">
           {daysAgoFunction(job?.createdAt) === 0
@@ -122,7 +119,7 @@ const Job = ({ job }) => {
         )}
         <Button
           onClick={isApplied ? null : applyJobHandler}
-          disabled={isExternal ? false : isApplied}
+          disabled={!isExternal && isApplied}
           className={`rounded-lg ${isApplied ? "bg-gray-600 cursor-not-allowed" : "bg-[#7209b7] hover:bg-[#5f32ad]"}`}
         >
           {isExternal ? "Visit Source" : isApplied ? "Already Applied" : "Apply Now"}

@@ -29,7 +29,7 @@ const Navbar = () => {
         }
     }
     return (
-        <header className='sticky top-0 z-50 border-b border-purple-100 bg-white/90 backdrop-blur'>
+        <header role='banner' className='sticky top-0 z-50 border-b border-purple-100 bg-white/90 backdrop-blur'>
             <div className='flex items-center justify-between mx-auto max-w-7xl h-16 px-4'>
                 <div>
                     <h1 className='text-2xl font-bold'>Job<span className='text-[#F83002]'>Portal</span></h1>

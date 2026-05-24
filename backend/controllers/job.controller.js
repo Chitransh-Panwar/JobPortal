@@ -36,7 +36,13 @@ export const postJob = async (req, res) => {
 // student k liye
 export const getAllJobs = async (req, res) => {
     try {
-        const keyword = req.query.keyword || "";
+        const keyword = (req.query.keyword || "").toString().trim();
+        if (keyword.length > 100) {
+            return res.status(400).json({
+                message: "Search keyword is too long.",
+                success: false
+            });
+        }
         const query = {
             $or: [
                 { title: { $regex: keyword, $options: "i" } },
@@ -64,6 +70,12 @@ export const getAllJobs = async (req, res) => {
 export const getJobById = async (req, res) => {
     try {
         const jobId = req.params.id;
+        if (!jobId || jobId.length > 100) {
+            return res.status(400).json({
+                message: "Invalid job id.",
+                success: false
+            });
+        }
         const job = await Job.findById(jobId).populate({
             path:"applications"
         });

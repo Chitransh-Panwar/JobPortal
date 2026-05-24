@@ -12,21 +12,21 @@ const useGetAllJobs = () => {
             dispatch(setJobsLoading(true));
             try {
                 const keywordQuery = encodeURIComponent(searchedQuery || "");
-                const internalRequest = axios.get(`${JOB_API_END_POINT}/get?keyword=${keywordQuery}`, { withCredentials: true });
-                const externalRequest = includeExternalJobs
-                    ? axios.get(
-                        `${EXTERNAL_JOB_API_END_POINT}?aggregate=true&keyword=${keywordQuery}&perPage=10`,
-                        { withCredentials: true }
-                    )
-                    : Promise.resolve({ data: { jobs: [] } });
+                const internalResult = await axios.get(`${JOB_API_END_POINT}/get?keyword=${keywordQuery}`, { withCredentials: true });
+                const internalJobs = internalResult.data.success ? internalResult.data.jobs || [] : [];
+                let externalJobs = [];
 
-                const [internalResult, externalResult] = await Promise.allSettled([internalRequest, externalRequest]);
-                const internalJobs = internalResult.status === "fulfilled" && internalResult.value.data.success
-                    ? internalResult.value.data.jobs || []
-                    : [];
-                const externalJobs = externalResult.status === "fulfilled"
-                    ? externalResult.value?.data?.jobs || []
-                    : [];
+                if (includeExternalJobs) {
+                    try {
+                        const externalResult = await axios.get(
+                            `${EXTERNAL_JOB_API_END_POINT}?aggregate=true&keyword=${keywordQuery}&perPage=10`,
+                            { withCredentials: true }
+                        );
+                        externalJobs = externalResult?.data?.jobs || [];
+                    } catch (externalError) {
+                        console.log(externalError);
+                    }
+                }
 
                 if (internalJobs.length || externalJobs.length) {
                     dispatch(setAllJobs([...internalJobs, ...externalJobs]));

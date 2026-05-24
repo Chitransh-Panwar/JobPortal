@@ -8,6 +8,7 @@ import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
 import externalJobRoute from "./routes/externalJob.route.js";
+import validateOrigin from "./middlewares/validateOrigin.js";
 import path from "path";
 
 dotenv.config({});
@@ -18,6 +19,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
+app.use(validateOrigin);
 const corsOptions = {
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials:true

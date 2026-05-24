@@ -5,13 +5,13 @@ import { useDispatch } from "react-redux";
 import { setSearchedQuery } from "@/redux/jobSlice";
 import { Button } from "./ui/button";
 
-const fitlerData = [
+const filterData = [
   {
-    fitlerType: "Location",
+    filterType: "Location",
     array: ["Delhi NCR", "Bangalore", "Hyderabad", "Pune", "Mumbai"],
   },
   {
-    fitlerType: "Industry",
+    filterType: "Industry",
     array: [
       "Frontend Developer",
       "Backend Developer",
@@ -40,9 +40,9 @@ const FilterCard = () => {
       <h1 className="font-bold text-lg">Filter Jobs</h1>
       <hr className="mt-3" />
       <RadioGroup value={selectedValue} onValueChange={changeHandler}>
-        {fitlerData.map((data, index) => (
-          <div key={data.fitlerType} className="pt-3">
-            <h1 className="font-bold text-lg">{data.fitlerType}</h1>
+        {filterData.map((data, index) => (
+          <div key={data.filterType} className="pt-3">
+            <h1 className="font-bold text-lg">{data.filterType}</h1>
             {data.array.map((item, idx) => {
               const itemId = `id${index}-${idx}`;
               return (
