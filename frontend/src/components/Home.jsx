@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import Navbar from './shared/Navbar'
 import HeroSection from './HeroSection'
 import CategoryCarousel from './CategoryCarousel'
@@ -16,9 +16,9 @@ const Home = () => {
     if (user?.role === 'recruiter') {
       navigate("/admin/companies");
     }
-  }, []);
+  }, [navigate, user?.role]);
   return (
-    <div>
+    <div className='min-h-screen bg-gradient-to-b from-purple-50 via-white to-orange-50'>
       <Navbar />
       <HeroSection />
       <CategoryCarousel />

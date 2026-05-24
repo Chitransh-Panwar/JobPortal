@@ -1,6 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+@tailwind components;
+@tailwind utilities;
 
   @layer base {
     :root {
@@ -15,6 +16,8 @@
 
       --primary: 222.2 47.4% 11.2%;
       --primary-foreground: 210 40% 98%;
+      --brand: 265 55% 49%;
+      --brand-foreground: 210 40% 98%;
 
       --secondary: 210 40% 96.1%;
       --secondary-foreground: 222.2 47.4% 11.2%;
@@ -71,6 +74,10 @@
       @apply border-border;
     }
     body {
-      @apply bg-background text-foreground;
+      font-family: 'Inter', sans-serif;
+      @apply bg-background text-foreground antialiased;
+    }
+    :focus-visible {
+      @apply outline-none ring-2 ring-offset-2 ring-violet-500;
     }
   }

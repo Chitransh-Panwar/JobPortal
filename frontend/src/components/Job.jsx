@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Bookmark } from "lucide-react";
 import { Avatar, AvatarImage } from "./ui/avatar";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { setSingleJob } from "@/redux/jobSlice";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Badge } from "./ui/badge";
 import axios from "axios";
-import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from "@/utils/constant";
+import { APPLICATION_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
 
 const Job = ({ job }) => {
   const navigate = useNavigate();
-  // const jobId = "lsekdhjgdsnfvsdkjf";
 
   const daysAgoFunction = (mongodbTime) => {
     const createdAt = new Date(mongodbTime);
@@ -21,70 +19,55 @@ const Job = ({ job }) => {
     return Math.floor(timeDifference / (1000 * 24 * 60 * 60));
   };
 
-  const { singleJob } = useSelector((store) => store.job);
   const { user } = useSelector((store) => store.auth);
-  const isIntiallyApplied =
-    job?.applications?.some(
-      (application) => application.applicant === user?._id,
-    ) || false;
-  const [isApplied, setIsApplied] = useState(isIntiallyApplied);
+  const isInitiallyApplied = job?.applications?.some((application) => application.applicant === user?._id) || false;
+  const [isApplied, setIsApplied] = useState(Boolean(isInitiallyApplied));
 
   const jobId = job?._id;
-
-  const dispatch = useDispatch();
+  const isExternal = Boolean(job?.isExternal);
 
   const applyJobHandler = async () => {
+    if (isExternal) {
+      if (job?.externalUrl) {
+        window.open(job.externalUrl, "_blank", "noopener,noreferrer");
+      }
+      return;
+    }
+    if (!user?._id) {
+      toast.error("Please login to apply for this job.");
+      navigate("/login");
+      return;
+    }
     try {
-      const res = await axios.get(
+      const res = await axios.post(
         `${APPLICATION_API_END_POINT}/apply/${jobId}`,
+        {},
         { withCredentials: true },
       );
 
       if (res.data.success) {
         setIsApplied(true); // Update the local state
-        const updatedSingleJob = {
-          ...singleJob,
-          applications: [...singleJob.applications, { applicant: user?._id }],
-        };
-        dispatch(setSingleJob(updatedSingleJob)); // helps us to real time UI update
         toast.success(res.data.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "Unable to apply right now.");
     }
   };
 
   useEffect(() => {
-    const fetchSingleJob = async () => {
-      try {
-        const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
-          withCredentials: true,
-        });
-        if (res.data.success) {
-          dispatch(setSingleJob(res.data.job));
-          setIsApplied(
-            res.data.job.applications.some(
-              (application) => application.applicant === user?._id,
-            ),
-          ); // Ensure the state is in sync with fetched data
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchSingleJob();
-  }, [jobId, dispatch, user?._id]);
+    setIsApplied(Boolean(isInitiallyApplied));
+  }, [isInitiallyApplied]);
 
   return (
-    <div className="p-5 rounded-md shadow-xl bg-white border border-gray-100">
+    <article aria-label={`Job card for ${job?.title || "job"}`} className="group rounded-2xl border border-purple-100 bg-white/95 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-500">
           {daysAgoFunction(job?.createdAt) === 0
             ? "Today"
             : `${daysAgoFunction(job?.createdAt)} days ago`}
         </p>
-        <Button variant="outline" className="rounded-full" size="icon">
+        <Button variant="outline" className="rounded-full" size="icon" aria-label="Save job">
           <Bookmark />
         </Button>
       </div>
@@ -97,7 +80,7 @@ const Job = ({ job }) => {
         </Button>
         <div>
           <h1 className="font-medium text-lg">{job?.company?.name}</h1>
-          <p className="text-sm text-gray-500">India</p>
+          <p className="text-sm text-gray-500">{job?.location || "India"}</p>
         </div>
       </div>
 
@@ -115,23 +98,34 @@ const Job = ({ job }) => {
         <Badge className={"text-[#7209b7] font-bold"} variant="ghost">
           {job?.salary}LPA
         </Badge>
+        {isExternal && (
+          <Badge className={"text-emerald-700 font-bold bg-emerald-100"} variant="ghost">
+            External
+          </Badge>
+        )}
       </div>
       <div className="flex items-center gap-4 mt-4">
-        <Button
-          onClick={() => navigate(`/description/${job?._id}`)}
-          variant="outline"
-        >
-          Details
-        </Button>
+        {isExternal ? (
+          <Button onClick={applyJobHandler} variant="outline">
+            Open Listing
+          </Button>
+        ) : (
+          <Button
+            onClick={() => navigate(`/description/${job?._id}`)}
+            variant="outline"
+          >
+            Details
+          </Button>
+        )}
         <Button
           onClick={isApplied ? null : applyJobHandler}
-          disabled={isApplied}
+          disabled={!isExternal && isApplied}
           className={`rounded-lg ${isApplied ? "bg-gray-600 cursor-not-allowed" : "bg-[#7209b7] hover:bg-[#5f32ad]"}`}
         >
-          {isApplied ? "Already Applied" : "Apply Now"}
+          {isExternal ? "Visit Source" : isApplied ? "Already Applied" : "Apply Now"}
         </Button>
       </div>
-    </div>
+    </article>
   );
 };
 

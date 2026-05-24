@@ -10,6 +10,8 @@ const jobSlice = createSlice({
     allAppliedJobs: [],
     searchedQuery: "",
     salaryFilter: null,
+    jobsLoading: false,
+    includeExternalJobs: false,
   },
   reducers: {
     // actions
@@ -34,6 +36,12 @@ const jobSlice = createSlice({
     setSalaryFilter: (state, action) => {
       state.salaryFilter = action.payload;
     },
+    setJobsLoading: (state, action) => {
+      state.jobsLoading = action.payload;
+    },
+    setIncludeExternalJobs: (state, action) => {
+      state.includeExternalJobs = action.payload;
+    },
   },
 });
 export const {
@@ -43,6 +51,8 @@ export const {
   setSearchJobByText,
   setAllAppliedJobs,
   setSearchedQuery,
-  setSalaryFilter 
+  setSalaryFilter,
+  setJobsLoading,
+  setIncludeExternalJobs,
 } = jobSlice.actions;
 export default jobSlice.reducer;
