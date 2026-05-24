@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import Navbar from '../shared/Navbar'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button' 
-import { useNavigate } from 'react-router-dom' 
-import { useDispatch } from 'react-redux' 
-import AdminJobsTable from './AdminJobsTable'
-import useGetAllAdminJobs from '@/hooks/useGetAllAdminJobs'
-import { setSearchJobByText } from '@/redux/jobSlice'
+import { useEffect, useState } from "react";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import AdminJobsTable from "./AdminJobsTable";
+import useGetAllAdminJobs from "@/hooks/useGetAllAdminJobs";
+import { setSearchJobByText } from "@/redux/jobSlice";
+import AdminLayout from "./AdminLayout";
 
 const AdminJobs = () => {
   useGetAllAdminJobs();
@@ -16,23 +16,27 @@ const AdminJobs = () => {
 
   useEffect(() => {
     dispatch(setSearchJobByText(input));
-  }, [input]);
+  }, [dispatch, input]);
+
   return (
-    <div>
-      <Navbar />
-      <div className='max-w-6xl mx-auto my-10'>
-        <div className='flex items-center justify-between my-5'>
+    <AdminLayout
+      title="Manage Jobs"
+      description="Track posted roles and review applications."
+      actions={
+        <>
           <Input
-            className="w-fit"
+            className="w-full md:w-72"
             placeholder="Filter by name, role"
             onChange={(e) => setInput(e.target.value)}
+            aria-label="Filter jobs"
           />
           <Button onClick={() => navigate("/admin/jobs/create")}>New Jobs</Button>
-        </div>
-        <AdminJobsTable />
-      </div>
-    </div>
-  )
-}
+        </>
+      }
+    >
+      <AdminJobsTable />
+    </AdminLayout>
+  );
+};
 
-export default AdminJobs
+export default AdminJobs;
