@@ -60,59 +60,60 @@ const Job = ({ job }) => {
   }, [isInitiallyApplied]);
 
   return (
-    <article aria-label={`Job card for ${job?.title || "job"}`} className="group rounded-2xl border border-purple-100 bg-white/95 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+    <article aria-label={`Job card for ${job?.title || "job"}`} className="group rounded-2xl border border-violet-100 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-slate-500">
           {daysAgoFunction(job?.createdAt) === 0
             ? "Today"
             : `${daysAgoFunction(job?.createdAt)} days ago`}
         </p>
-        <Button variant="outline" className="rounded-full" size="icon" aria-label="Save job">
+        <Button variant="outline" className="rounded-full border-violet-200 bg-white" size="icon" aria-label="Save job">
           <Bookmark />
         </Button>
       </div>
 
       <div className="flex items-center gap-2 my-2">
-        <Button className="p-6" variant="outline" size="icon">
+        <Button className="p-6 border-violet-100" variant="outline" size="icon">
           <Avatar>
             <AvatarImage src={job?.company?.logo} />
           </Avatar>
         </Button>
         <div>
-          <h1 className="font-medium text-lg">{job?.company?.name}</h1>
-          <p className="text-sm text-gray-500">{job?.location || "India"}</p>
+          <h1 className="font-medium text-lg text-slate-900">{job?.company?.name}</h1>
+          <p className="text-sm text-slate-500">{job?.location || "India"}</p>
         </div>
       </div>
 
       <div>
-        <h1 className="font-bold text-lg my-2">{job?.title}</h1>
-        <p className="text-sm text-gray-600">{job?.description}</p>
+        <h1 className="font-bold text-lg my-2 text-slate-900">{job?.title}</h1>
+        <p className="text-sm text-slate-600">{job?.description}</p>
       </div>
-      <div className="flex items-center gap-2 mt-4">
-        <Badge className={"text-blue-700 font-bold"} variant="ghost">
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <Badge className="bg-blue-100 text-blue-700 font-bold" variant="outline">
           {job?.position} Positions
         </Badge>
-        <Badge className={"text-[#F83002] font-bold"} variant="ghost">
+        <Badge className="bg-orange-100 text-orange-700 font-bold" variant="outline">
           {job?.jobType}
         </Badge>
-        <Badge className={"text-[#7209b7] font-bold"} variant="ghost">
+        <Badge className="bg-violet-100 text-violet-700 font-bold" variant="outline">
           {job?.salary}LPA
         </Badge>
         {isExternal && (
-          <Badge className={"text-emerald-700 font-bold bg-emerald-100"} variant="ghost">
+          <Badge className="text-emerald-700 font-bold bg-emerald-100" variant="outline">
             External
           </Badge>
         )}
       </div>
       <div className="flex items-center gap-4 mt-4">
         {isExternal ? (
-          <Button onClick={applyJobHandler} variant="outline">
+          <Button onClick={applyJobHandler} variant="outline" className="border-violet-200">
             Open Listing
           </Button>
         ) : (
           <Button
             onClick={() => navigate(`/description/${job?._id}`)}
             variant="outline"
+            className="border-violet-200"
           >
             Details
           </Button>
@@ -120,7 +121,7 @@ const Job = ({ job }) => {
         <Button
           onClick={isApplied ? null : applyJobHandler}
           disabled={!isExternal && isApplied}
-          className={`rounded-lg ${isApplied ? "bg-gray-600 cursor-not-allowed" : "bg-[#7209b7] hover:bg-[#5f32ad]"}`}
+          className={`rounded-lg ${isApplied ? "bg-slate-500 cursor-not-allowed" : ""}`}
         >
           {isExternal ? "Visit Source" : isApplied ? "Already Applied" : "Apply Now"}
         </Button>
