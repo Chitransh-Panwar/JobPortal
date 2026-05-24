@@ -29,13 +29,13 @@ const Navbar = () => {
         }
     }
     return (
-        <div className='bg-white'>
-            <div className='flex items-center justify-between mx-auto max-w-7xl h-16'>
+        <header className='sticky top-0 z-50 border-b border-purple-100 bg-white/90 backdrop-blur'>
+            <div className='flex items-center justify-between mx-auto max-w-7xl h-16 px-4'>
                 <div>
                     <h1 className='text-2xl font-bold'>Job<span className='text-[#F83002]'>Portal</span></h1>
                 </div>
-                <div className='flex items-center gap-12'>
-                    <ul className='flex font-medium items-center gap-5'>
+                <div className='flex items-center gap-4 md:gap-8'>
+                    <ul className='hidden md:flex font-medium items-center gap-5'>
                         {
                             user && user.role === 'recruiter' ? (
                                 <>
@@ -101,7 +101,7 @@ const Navbar = () => {
                 </div>
             </div>
 
-        </div>
+        </header>
     )
 }
 

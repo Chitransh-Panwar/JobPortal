@@ -153,9 +153,6 @@ cd backend
 # Install dependencies
 npm install
 
-# Create .env file (see Environment Variables section)
-touch .env
-
 # Start the server
 npm start
 ```
@@ -184,7 +181,8 @@ npm run build
 
 ## Environment Variables
 
-Create a `.env` file in the `backend` directory with the following variables:
+Set these environment variables in your shell (for local runs) or in your Render service settings (for deployment).  
+Do **not** commit secrets and do **not** create a `.env` file in this repository.
 
 ```env
 # Database
@@ -203,7 +201,25 @@ PORT=3000
 
 # Frontend URL (for CORS)
 FRONTEND_URL=http://localhost:5173
+
+# External job providers
+USAJOB_API_KEY=your_usajobs_key
+USAJOB_USER_AGENT=your_email_or_app_identifier
+ADZUNA_APP_ID=your_adzuna_app_id
+ADZUNA_APP_KEY=your_adzuna_app_key
+RAPIDAPI_KEY=your_rapidapi_key
+MUSE_API_KEY=your_muse_api_key
+FINDWORK_API_KEY=your_findwork_api_key
+JOOBLE_API_KEY=your_jooble_api_key
 ```
+
+### External Jobs Endpoint
+
+Use `/api/v1/external-jobs` with one of the following modes:
+
+- Single provider: `/api/v1/external-jobs?provider=adzuna&keyword=react`
+- Multiple providers: `/api/v1/external-jobs?providers=adzuna,muse&keyword=react`
+- Aggregate all providers: `/api/v1/external-jobs?aggregate=true&keyword=react`
 
 ---
 
